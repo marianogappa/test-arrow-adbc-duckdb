@@ -121,8 +121,8 @@ func (r *DuckDBSQLRunner) runSQL(sql string, ignoreOutput bool) ([]arrow.Record,
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
+	defer out.Release()
 	if ignoreOutput {
-		out.Release()
 		return nil, nil
 	}
 
