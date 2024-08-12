@@ -19,6 +19,7 @@ const tempTable = "source_table"
 type DuckDBSQLRunner struct {
 	ctx  context.Context
 	conn adbc.Connection
+	db   adbc.Database
 }
 
 func New(ctx context.Context) (*DuckDBSQLRunner, error) {
@@ -36,7 +37,7 @@ func New(ctx context.Context) (*DuckDBSQLRunner, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open connection to new in-memory DuckDB database: %w", err)
 	}
-	return &DuckDBSQLRunner{ctx: ctx, conn: conn}, nil
+	return &DuckDBSQLRunner{ctx: ctx, conn: conn, db: db}, nil
 }
 
 func serializeRecord(record arrow.Record) (io.Reader, error) {
@@ -167,4 +168,5 @@ func (r *DuckDBSQLRunner) RunSQLOnRecord(record arrow.Record, sqls ...string) ([
 
 func (r *DuckDBSQLRunner) Close() {
 	r.conn.Close()
+	r.db.Close()
 }
