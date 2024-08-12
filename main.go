@@ -90,7 +90,7 @@ func main() {
 		panic(err)
 	}
 	defer runner.Close()
-	resultRecords, err := runner.RunSQLOnRecord(rec, "SELECT * FROM {{.Table}}")
+	resultRecords, err := runner.RunSQLOnRecord(rec, "SELECT column1+1 FROM {{.Table}}")
 	if err != nil {
 		panic(err)
 	}

@@ -127,7 +127,9 @@ func (r *DuckDBSQLRunner) runSQL(sql string, ignoreOutput bool) ([]arrow.Record,
 
 	result := make([]arrow.Record, 0, n)
 	for out.Next() {
-		result = append(result, out.Record())
+		rec := out.Record()
+		rec.Retain() // .Next() will release the record, so we need to retain it
+		result = append(result, rec)
 	}
 	if out.Err() != nil {
 		return nil, out.Err()
@@ -155,6 +157,7 @@ func (r *DuckDBSQLRunner) RunSQLOnRecord(record arrow.Record, sqls ...string) ([
 			return nil, fmt.Errorf("failed to run SQL: %w", err)
 		}
 	}
+
 	if _, err := r.runSQL("DROP TABLE "+tempTable, true); err != nil {
 		return nil, fmt.Errorf("failed to drop temp table after running query: %w", err)
 	}
