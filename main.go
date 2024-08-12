@@ -16,9 +16,8 @@ func _makeSampleArrowRecord() arrow.Record {
 	b.AppendValues([]float64{1, 2, 3}, nil)
 	col := b.NewArray()
 
-	// defer col.Release()
-	// defer b.Release()
-	// defer batchRecord.Release()
+	defer col.Release()
+	defer b.Release()
 
 	// Create a record batch with the column
 	schema := arrow.NewSchema([]arrow.Field{{Name: "column1", Type: arrow.PrimitiveTypes.Float64}}, nil)
