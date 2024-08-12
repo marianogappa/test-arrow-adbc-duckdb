@@ -59,6 +59,7 @@ func (r *DuckDBSQLRunner) importRecord(sr io.Reader) error {
 	if err != nil {
 		return fmt.Errorf("failed to create IPC reader: %w", err)
 	}
+	defer rdr.Release()
 
 	stmt, err := r.conn.NewStatement()
 	if err != nil {
